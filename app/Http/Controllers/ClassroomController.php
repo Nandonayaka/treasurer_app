@@ -176,13 +176,27 @@ class ClassroomController extends Controller
     /**
      * Display the full history of transactions.
      */
-    public function history(Classroom $classroom)
+    public function history(Request $request, Classroom $classroom)
     {
         if ($classroom->user_id !== Auth::id()) {
             abort(403);
         }
 
-        $transactions = $classroom->transactions()->latest()->paginate(15);
+        $query = $classroom->transactions();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        $transactions = $query->latest()->paginate(15)->withQueryString();
         
         return view('classrooms.history', compact('classroom', 'transactions'));
     }

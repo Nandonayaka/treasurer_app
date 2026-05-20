@@ -1,12 +1,12 @@
 <section>
     <header>
         <h2 class="text-2xl font-black text-slate-800 tracking-tight">
-            Profile Information
+            Informasi Profil
         </h2>
 
         <p class="mt-1 flex items-center gap-2 text-sm font-bold text-slate-400">
             <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            Update your account's profile information and email address.
+            Perbarui informasi profil dan alamat email akun Anda.
         </p>
     </header>
 
@@ -14,19 +14,19 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-8 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-8 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
 
         <div>
-            <label for="name" class="block text-xs font-black text-slate-500 uppercase tracking-widest pl-1 mb-2">Name</label>
-            <input id="name" name="name" type="text" class="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 shadow-inner" value="{{ old('name', $user->name) }}" required autofocus autocomplete="name" placeholder="Your full name" />
+            <label for="name" class="block text-xs font-black text-slate-500 uppercase tracking-widest pl-1 mb-2">Nama Lengkap</label>
+            <input id="name" name="name" type="text" class="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 shadow-inner" value="{{ old('name', $user->name) }}" required autofocus autocomplete="name" placeholder="Nama lengkap Anda" />
             <x-input-error class="mt-2 text-xs font-bold text-rose-500" :messages="$errors->get('name')" />
         </div>
 
         <div>
-            <label for="email" class="block text-xs font-black text-slate-500 uppercase tracking-widest pl-1 mb-2">Email Address</label>
-            <input id="email" name="email" type="email" class="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 shadow-inner" value="{{ old('email', $user->email) }}" required autocomplete="username" placeholder="Your email address" />
+            <label for="email" class="block text-xs font-black text-slate-500 uppercase tracking-widest pl-1 mb-2">Alamat Email</label>
+            <input id="email" name="email" type="email" class="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 shadow-inner" value="{{ old('email', $user->email) }}" required autocomplete="username" placeholder="Alamat email aktif Anda" />
             <x-input-error class="mt-2 text-xs font-bold text-rose-500" :messages="$errors->get('email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
@@ -50,20 +50,10 @@
 
         <div class="flex items-center gap-4 pt-4 border-t border-slate-100/50">
             <button type="submit" class="bg-slate-900 text-white px-8 py-3.5 rounded-[1.2rem] font-black text-sm hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 active:scale-95 leading-none">
-                Save Changes
+                Simpan Perubahan
             </button>
 
-            @if (session('status') === 'profile-updated')
-                <p  x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 3000)"
-                    class="text-sm font-black text-emerald-500 flex items-center gap-2 bg-emerald-50 px-4 py-2 rounded-xl"
-                >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                    Saved Successfully
-                </p>
-            @endif
+            </button>
         </div>
     </form>
 </section>
