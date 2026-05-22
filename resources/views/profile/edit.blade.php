@@ -12,7 +12,15 @@
             </svg>
         </div>
 
-        <div class="max-w-md mx-auto px-6 relative pt-24 md:pt-32">
+        <div class="max-w-md mx-auto px-6 relative pt-12 md:pt-32">
+            <!-- Back Button (Mobile Only) -->
+            <div class="lg:hidden mb-6 flex items-center justify-between">
+                <a href="{{ route('dashboard') }}" class="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-xl flex items-center justify-center text-white border border-white/20 shadow-lg active:scale-95 transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
+                </a>
+                <span class="text-white font-black text-xs uppercase tracking-widest">Pengaturan Profil</span>
+                <div class="w-10"></div> <!-- Spacer -->
+            </div>
             <!-- Content starts below navigation bar -->
 
             <!-- Profile Info Header -->

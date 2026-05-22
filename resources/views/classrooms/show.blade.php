@@ -6,6 +6,7 @@
         showDetailModal: false,
         showConfirmModal: false,
         showNextPeriodModal: false,
+        showDeleteClassroomModal: false,
         searchMember: '', 
         selectedMember: '', 
         memberName: '',
@@ -39,7 +40,7 @@
         get unpaidCount() {
             return this.members.filter(m => m.isUnpaid).length;
         }
-    }" x-on:keydown.escape="showDrawer = false; showEditDrawer = false; showMemberDrawer = false; showDetailModal = false; showConfirmModal = false; showNextPeriodModal = false;">
+    }" x-on:keydown.escape="showDrawer = false; showEditDrawer = false; showMemberDrawer = false; showDetailModal = false; showConfirmModal = false; showNextPeriodModal = false; showDeleteClassroomModal = false;">
         
         <!-- Main Content -->
         <div class="py-6 md:py-10">
@@ -271,76 +272,88 @@
             </div>
         </div>
 
-        <!-- Add Transaction Modal -->
-        <div x-show="showDrawer" class="fixed inset-0 z-[120] flex items-end md:items-center justify-center p-4 md:p-6" style="display: none;">
-            <div x-show="showDrawer" x-transition.opacity @@click="showDrawer = false" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
-            <div x-show="showDrawer" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-full md:translate-y-0 md:scale-95" x-transition:enter-end="opacity-100 translate-y-0 md:scale-100" class="relative w-full max-w-md bg-white shadow-3xl rounded-t-[2rem] md:rounded-[2rem] overflow-hidden flex flex-col max-h-[90vh]">
-                <div class="px-6 py-6 md:px-10 md:pt-10 md:pb-6 border-b border-slate-50 flex justify-between items-center shrink-0">
-                    <h1 class="text-xl md:text-2xl font-black text-slate-900">Tambah Transaksi</h1>
-                    <button @click="showDrawer = false" class="p-2 md:p-2.5 bg-slate-50 rounded-xl text-slate-400 hover:text-rose-500 transition-colors">
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
-                </div>
-                <form id="txForm" action="{{ route('transactions.store') }}" method="POST" @submit.prevent="showConfirmModal = true" class="flex-1 p-6 md:p-10 space-y-6 md:space-y-8 overflow-y-auto custom-scrollbar">
-                    @csrf
-                    <input type="hidden" name="classroom_id" value="{{ $classroom->id }}">
-                    <input type="hidden" name="member_id" x-model="selectedMember">
-                    <div class="space-y-6">
-                        <div class="relative" x-data="{ memberListOpen: false }">
-                            <label class="text-[9px] md:text-xs font-black text-slate-400 uppercase tracking-widest block mb-2 px-1">Pilih Anggota / Kas</label>
-                            <div @@click="memberListOpen = !memberListOpen" class="w-full p-4 md:p-5 bg-slate-50 rounded-2xl border border-slate-50 flex items-center justify-between cursor-pointer group hover:bg-slate-100 transition-all">
-                                <span class="font-black text-slate-800 text-sm md:text-base tabular-nums" x-text="memberName || 'Cari nama di sini...'"></span>
-                                <svg class="w-4 h-4 text-slate-300 transition-transform" :class="memberListOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            </div>
-                            <input type="hidden" name="name" x-model="memberName">
-                            <div x-show="memberListOpen" @@click.away="memberListOpen = false" class="absolute z-20 mt-2 w-full bg-white border border-slate-100 rounded-3xl shadow-3xl p-3" style="display: none;">
-                                <input type="text" x-model="searchMember" placeholder="Ketik nama di sini..." class="w-full rounded-2xl border-none bg-slate-50 mb-3 focus:ring-2 focus:ring-emerald-500 text-xs p-4 font-bold shadow-inner">
-                                <div class="max-h-52 overflow-y-auto custom-scrollbar space-y-1 pr-1">
-                                    <div @@click="selectedMember = ''; memberName = 'Umum'; memberListOpen = false" class="p-3.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-2xl cursor-pointer flex items-center justify-between transition-all">
-                                        <span class="font-black text-[10px] uppercase tracking-widest">Kas Utama (Umum)</span>
-                                        <svg class="w-5 h-5 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                                    </div>
-                                    <template x-for="m in members.filter(item => item.name.toLowerCase().includes(searchMember.toLowerCase()))" :key="m.id">
-                                        <div @@click="selectedMember = m.id; memberName = m.name; memberListOpen = false" class="p-3.5 hover:bg-slate-50 rounded-2xl cursor-pointer flex items-center justify-between transition-all">
-                                            <span class="font-black text-slate-700 text-xs md:text-sm" x-text="m.name"></span>
-                                            <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest" x-text="m.gender === 'male' ? 'L' : 'P'"></span>
+        <!-- Add Transaction Drawer -->
+        <div x-show="showDrawer" class="fixed inset-0 z-[120] overflow-hidden" style="display: none;">
+            <div x-show="showDrawer" x-transition.opacity @click="showDrawer = false" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
+            <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+                <div x-show="showDrawer" x-transition:enter="transform transition ease-in-out duration-500" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" class="w-screen max-w-md">
+                    <div class="h-full flex flex-col bg-white shadow-3xl rounded-l-[2rem] overflow-hidden">
+                        <div class="px-6 py-6 md:px-10 md:pt-12 md:pb-6 border-b border-slate-50 flex justify-between items-center shrink-0">
+                            <h2 class="text-xl md:text-2xl font-black text-slate-900">Tambah Transaksi</h2>
+                            <button @click="showDrawer = false" class="p-2 md:p-2.5 bg-slate-50 rounded-xl text-slate-400 hover:text-rose-500 transition-colors">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+                        <form id="txForm" action="{{ route('transactions.store') }}" method="POST" @submit.prevent="showConfirmModal = true" class="flex-1 p-6 md:p-10 space-y-8 overflow-y-auto custom-scrollbar">
+                            @csrf
+                            <input type="hidden" name="classroom_id" value="{{ $classroom->id }}">
+                            <input type="hidden" name="member_id" x-model="selectedMember">
+                            
+                            <div class="space-y-6">
+                                <!-- Member Selector -->
+                                <div class="relative" x-data="{ memberListOpen: false }">
+                                    <label class="text-[9px] md:text-xs font-black text-slate-400 uppercase tracking-widest block mb-2 px-1">Pilih Anggota / Kas</label>
+                                    <div @click="memberListOpen = !memberListOpen" class="w-full bg-slate-50 rounded-2xl p-4 flex items-center justify-between cursor-pointer border-2 border-transparent transition-all" :class="memberListOpen ? 'border-slate-900 bg-white ring-4 ring-slate-900/5' : ''">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-xs" x-text="selectedMember ? memberName.charAt(0) : '?'"></div>
+                                            <span class="font-black text-slate-800 text-sm" x-text="selectedMember ? memberName : 'Cari nama di sini...'"></span>
                                         </div>
-                                    </template>
+                                        <svg class="w-4 h-4 text-slate-400 transition-transform" :class="memberListOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+                                    </div>
+
+                                    <div x-show="memberListOpen" @click.away="memberListOpen = false" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" class="absolute z-[130] left-0 right-0 mt-3 bg-white rounded-3xl shadow-2xl border border-slate-100 p-3 max-h-64 overflow-y-auto custom-scrollbar">
+                                        <div class="relative mb-3">
+                                            <input type="text" x-model="searchMember" placeholder="Ketik nama anggota..." class="w-full bg-slate-50 border-none rounded-xl py-3 pl-10 pr-4 text-xs font-bold text-slate-600 focus:ring-0">
+                                            <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                        </div>
+                                        
+                                        <div @click="selectedMember = ''; memberName = 'Umum'; memberListOpen = false" class="p-3.5 hover:bg-emerald-50 rounded-2xl cursor-pointer flex items-center justify-between transition-all group">
+                                            <span class="font-black text-emerald-600 text-xs md:text-sm">Kas Utama (Umum)</span>
+                                            <svg class="w-5 h-5 text-emerald-400 opacity-40 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                                        </div>
+                                        <template x-for="m in members.filter(item => item.name.toLowerCase().includes(searchMember.toLowerCase()))" :key="m.id">
+                                            <div @click="selectedMember = m.id; memberName = m.name; memberListOpen = false" class="p-3.5 hover:bg-slate-50 rounded-2xl cursor-pointer flex items-center justify-between transition-all">
+                                                <span class="font-black text-slate-700 text-xs md:text-sm" x-text="m.name"></span>
+                                                <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest" x-text="m.gender === 'male' ? 'L' : 'P'"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-[9px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block px-1">Nominal</label>
+                                        <div class="relative">
+                                            <span class="absolute left-5 top-1/2 -translate-y-1/2 text-sm font-black text-slate-400">Rp</span>
+                                            <input type="number" name="amount" required x-model="txAmount" class="w-full bg-slate-50 border-none rounded-2xl py-4 pl-12 pr-5 font-black text-base text-slate-800 focus:ring-2 focus:ring-slate-900 transition-all shadow-inner tabular-nums">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="text-[9px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block px-1">Tipe</label>
+                                        <select name="type" x-model="txType" class="w-full border-none rounded-2xl font-black text-[10px] md:text-xs p-4 py-[1.125rem] focus:ring-0 transition-all uppercase tracking-widest shadow-inner cursor-pointer" :class="txType === 'expense' ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'">
+                                            <option value="income">Pemasukan (+)</option>
+                                            <option value="expense">Pengeluaran (-)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="text-[9px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block px-1">Keterangan / Pesan</label>
+                                    <input type="text" name="description" x-model="txDescription" placeholder="Contoh: Bayar kas, beli buku..." class="w-full bg-slate-50 border-none rounded-2xl p-4 md:p-5 font-bold text-xs md:text-sm text-slate-700 focus:ring-2 focus:ring-slate-900 transition-all shadow-inner">
+                                </div>
+
+                                <div>
+                                    <label class="text-[9px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block px-1">Waktu Transaksi</label>
+                                    <input type="datetime-local" name="date" required value="{{ date('Y-m-d\TH:i') }}" class="w-full bg-slate-50 border-none rounded-2xl p-4 md:p-5 font-black text-[10px] md:text-xs text-slate-700 focus:ring-2 focus:ring-slate-900 transition-all shadow-inner cursor-pointer">
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-[9px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block px-1">Nominal</label>
-                                <div class="relative">
-                                    <span class="absolute left-5 top-1/2 -translate-y-1/2 text-sm font-black text-slate-400">Rp</span>
-                                    <input type="number" name="amount" required x-model="txAmount" class="w-full bg-slate-50 border-none rounded-2xl py-4 pl-12 pr-5 font-black text-lg text-slate-800 focus:ring-2 focus:ring-slate-900 transition-all shadow-inner tabular-nums">
-                                </div>
+                            
+                            <div class="pt-6">
+                                <button type="submit" class="w-full py-5 bg-slate-900 text-white rounded-3xl font-black text-lg shadow-2xl active:scale-95 transition-all">Lanjutkan Transaksi</button>
                             </div>
-                            <div>
-                                <label class="text-[9px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block px-1">Tipe</label>
-                                <select name="type" x-model="txType" class="w-full border-none rounded-2xl font-black text-[10px] md:text-xs p-4 py-[1.125rem] focus:ring-0 transition-all uppercase tracking-widest shadow-inner cursor-pointer" :class="txType === 'expense' ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'">
-                                    <option value="income">Pemasukan (+)</option>
-                                    <option value="expense">Pengeluaran (-)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="text-[9px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block px-1">Keterangan / Pesan</label>
-                            <input type="text" name="description" x-model="txDescription" placeholder="Contoh: Bayar kas, beli buku..." class="w-full bg-slate-50 border-none rounded-2xl p-4 md:p-5 font-bold text-xs md:text-sm text-slate-700 focus:ring-2 focus:ring-slate-900 transition-all shadow-inner">
-                        </div>
-
-                        <div>
-                            <label class="text-[9px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block px-1">Waktu Transaksi</label>
-                            <input type="datetime-local" name="date" required value="{{ date('Y-m-d\TH:i') }}" class="w-full bg-slate-50 border-none rounded-2xl p-4 md:p-5 font-black text-[10px] md:text-xs text-slate-700 focus:ring-2 focus:ring-slate-900 transition-all shadow-inner cursor-pointer">
-                        </div>
+                        </form>
                     </div>
-                    <div class="pt-2">
-                        <button type="submit" class="w-full py-5 bg-slate-900 text-white rounded-2xl md:rounded-3xl font-black text-base md:text-lg shadow-xl shadow-slate-200 active:scale-95 transition-all">Lanjutkan Transaksi</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
 
@@ -380,6 +393,27 @@
                     </button>
                     <button type="button" @click="showNextPeriodModal = false" :disabled="loading" class="w-full py-3 text-slate-400 font-bold text-xs uppercase tracking-widest">Tunda</button>
                 </form>
+            </div>
+        </div>
+
+        <!-- Confirm Delete Classroom Modal -->
+        <div x-show="showDeleteClassroomModal" class="fixed inset-0 z-[200] flex items-center justify-center p-6" style="display: none;" x-transition>
+            <div x-show="showDeleteClassroomModal" x-transition.opacity @click="showDeleteClassroomModal = false" class="absolute inset-0 bg-slate-900/60 backdrop-blur-md"></div>
+            <div x-show="showDeleteClassroomModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="relative w-full max-w-sm bg-white rounded-[2rem] shadow-3xl overflow-hidden p-8 md:p-12 text-center">
+                <div class="w-20 h-20 bg-rose-50 text-rose-500 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-xl shadow-rose-100/20">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </div>
+                <h3 class="text-2xl font-black text-slate-900 mb-3">Hapus Ruang Kas?</h3>
+                <p class="text-slate-400 text-xs md:text-sm font-bold mb-10 px-4 leading-relaxed">
+                    Semua data anggota dan transaksi akan hilang <span class="text-rose-500">selamanya</span>. Tindakan ini tidak dapat dibatalkan.
+                </p>
+                <div class="flex flex-col gap-3" x-data="{ loading: false }">
+                    <button type="button" @click="loading = true; document.getElementById('delete-form').submit()" :disabled="loading" class="w-full py-5 bg-rose-600 text-white rounded-2xl md:rounded-[1.5rem] font-black text-base shadow-xl shadow-rose-100 active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-3">
+                        <template x-if="loading"><svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></template>
+                        <span x-text="loading ? 'Menghapus...' : 'Ya, Hapus Sekarang'"></span>
+                    </button>
+                    <button type="button" @click="showDeleteClassroomModal = false" :disabled="loading" class="w-full py-3 text-slate-400 font-bold text-xs uppercase tracking-widest hover:text-slate-600 transition-colors">Batal</button>
+                </div>
             </div>
         </div>
 
@@ -468,7 +502,7 @@
                             </div>
                             <div class="pt-6 space-y-4">
                                 <button type="submit" class="w-full py-5 bg-slate-900 text-white rounded-3xl font-black text-lg shadow-2xl active:scale-95 transition-all">Simpan Perubahan</button>
-                                <button type="button" @click="if(confirm('Hapus ruang ini selamanya?')) document.getElementById('delete-form').submit()" class="w-full py-4 text-rose-500 font-bold text-[10px] uppercase tracking-widest hover:bg-rose-50 rounded-2xl transition-colors">Hapus Ruang Ini</button>
+                                <button type="button" @click="showDeleteClassroomModal = true" class="w-full py-4 text-rose-500 font-bold text-[10px] uppercase tracking-widest hover:bg-rose-50 rounded-2xl transition-colors">Hapus Ruang Ini</button>
                             </div>
                         </form>
                         <form id="delete-form" action="{{ route('classrooms.destroy', $classroom) }}" method="POST" class="hidden">

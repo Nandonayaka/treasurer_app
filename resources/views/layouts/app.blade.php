@@ -77,7 +77,9 @@
                 @include('layouts.desktop-nav')
 
                 <!-- Top Navigation (Mobile) -->
-                @include('layouts.navigation')
+                @unless(request()->routeIs('profile.*'))
+                    @include('layouts.navigation')
+                @endunless
 
                 <!-- Page Content -->
                 <main class="flex-1 bg-white md:bg-slate-50 overflow-x-hidden">
