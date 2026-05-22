@@ -37,7 +37,6 @@
                             <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-none mb-2">Halo {{ Auth::user()->name }}!</h1>
                             <p class="text-slate-500 font-medium text-xs md:text-sm max-w-sm leading-relaxed">Siap untuk mengelola keuangan organisasi hari ini?</p>
                         </div>
-
                     </div>
 
             <!-- Mobile Clock & Date Header -->

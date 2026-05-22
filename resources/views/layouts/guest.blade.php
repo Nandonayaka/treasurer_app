@@ -8,6 +8,8 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <!-- AOS Styles -->
+        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
         <meta name="view-transition" content="same-origin">
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <style>
@@ -18,5 +20,13 @@
         <div class="min-h-screen">
             {{ $slot }}
         </div>
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <script>
+            AOS.init({
+                duration: 800,
+                once: true,
+                easing: 'ease-out-quart'
+            });
+        </script>
     </body>
 </html>

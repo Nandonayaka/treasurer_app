@@ -7,6 +7,8 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <!-- AOS Styles -->
+        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <style>
             body {
@@ -48,22 +50,22 @@
             }
         </style>
     </head>
-    <body class="antialiased bg-white text-slate-900 overflow-x-hidden">
+    <body class="antialiased bg-white text-slate-900 overflow-x-hidden" x-data="{}">
         <!-- Navbar -->
-        <nav class="fixed top-0 left-0 right-0 z-50 glass">
+        <nav class="fixed top-0 left-0 right-0 z-50 glass" data-aos="fade-down" data-aos-duration="1000">
             <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                <div class="flex items-center">
+                <div class="flex items-center" data-aos="fade-right" data-aos-delay="200">
                     <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-12 h-12 object-contain" draggable="false">
                 </div>
 
-                <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+                <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600" data-aos="fade-down" data-aos-delay="400">
                     <a href="#fitur" class="hover:text-emerald-600 transition-colors">Fitur</a>
                     <a href="#cara-kerja" class="hover:text-emerald-600 transition-colors">Cara Kerja</a>
                     <a href="#preview" class="hover:text-emerald-600 transition-colors">Preview</a>
                     <a href="#testimoni" class="hover:text-emerald-600 transition-colors">Testimoni</a>
                 </div>
 
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-4" data-aos="fade-left" data-aos-delay="200">
                     @auth
                         <a href="{{ url('/dashboard') }}" class="px-5 py-2.5 bg-slate-900 text-white rounded-full text-sm font-bold shadow-lg shadow-slate-200 hover:scale-105 transition-all active:scale-95">Dashboard</a>
                     @else
@@ -79,29 +81,26 @@
             <div class="max-w-7xl mx-auto px-6 text-center">
                 <!-- Badges -->
                 <div class="flex flex-wrap justify-center gap-3 mb-10">
-                    <span class="px-4 py-2 bg-emerald-50 text-emerald-600 rounded-full text-xs font-bold border border-emerald-100 flex items-center gap-2">
+                    <span class="px-4 py-2 bg-emerald-50 text-emerald-600 rounded-full text-xs font-bold border border-emerald-100 flex items-center gap-2" data-aos="fade-right" data-aos-delay="600">
                         <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
                         Tanpa Install Aplikasi
                     </span>
-                    <span class="px-4 py-2 bg-slate-50 text-slate-600 rounded-full text-xs font-bold border border-slate-100 flex items-center gap-2">
+                    <span class="px-4 py-2 bg-slate-50 text-slate-600 rounded-full text-xs font-bold border border-slate-100 flex items-center gap-2" data-aos="fade-left" data-aos-delay="800">
                         <svg class="w-3 h-3 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v1a1 1 0 11-2 0v-1a1 1 0 112 0zM13.336 16.336a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 011.414-1.414l.707.707z" /></svg>
                         Cepat & Praktis
                     </span>
-                    <span class="px-4 py-2 bg-slate-50 text-slate-600 rounded-full text-xs font-bold border border-slate-100">
-                        Multi User
-                    </span>
                 </div>
 
-                <h1 class="text-4xl md:text-7xl font-black tracking-tight text-slate-900 mb-6 leading-[1.1]">
-                    Catat keuangan organisasi<br>
-                    <span class="text-emerald-600">langsung dari smartphone.</span>
+                <h1 class="text-4xl md:text-7xl font-black tracking-tight text-slate-900 mb-6 leading-[1.1]" data-aos="fade-up" data-aos-duration="1000">
+                    <span id="typewriter1"></span><br>
+                    <span class="text-emerald-600" id="typewriter2"></span><span id="main-cursor" class="inline-block w-1 h-8 md:h-16 bg-emerald-600 ml-1 animate-pulse"></span>
                 </h1>
                 
-                <p class="max-w-2xl mx-auto text-lg md:text-xl text-slate-500 font-medium leading-relaxed mb-10">
+                <p class="max-w-2xl mx-auto text-lg md:text-xl text-slate-500 font-medium leading-relaxed mb-10" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
                     Cara paling simpel mencatat pengeluaran dan pemasukan harian organisasi hanya melalui satu dashboard terintegrasi.
                 </p>
 
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4" data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000">
                     <a href="{{ route('register') }}" class="w-full sm:w-auto px-10 py-5 bg-emerald-600 text-white rounded-2xl font-black text-lg shadow-2xl shadow-emerald-200 hover:bg-emerald-700 transition-all active:scale-95 group">
                         Mulai Catat uang
                         <svg class="w-5 h-5 inline-block ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
@@ -114,12 +113,12 @@
         <section id="cara-kerja" class="py-32 bg-slate-50/50 relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-white to-transparent"></div>
             <div class="max-w-7xl mx-auto px-6 relative z-10">
-                <div class="text-center mb-16">
+                <div class="text-center mb-16" data-aos="fade-up">
                     <h3 class="text-emerald-600 font-bold tracking-widest text-sm uppercase mb-4">Cara Pakai</h3>
                     <h2 class="text-4xl md:text-5xl font-black text-slate-900 leading-tight">Video Panduan Praktis</h2>
                 </div>
 
-                <div class="max-w-4xl mx-auto group">
+                <div class="max-w-4xl mx-auto group" data-aos="zoom-in-up" data-aos-duration="1000">
                     <div class="relative pt-[56.25%] rounded-[2.5rem] overflow-hidden shadow-2xl shadow-emerald-900/10 border-8 border-white group-hover:scale-[1.01] transition-transform duration-700">
                         <iframe 
                             class="absolute inset-0 w-full h-full"
@@ -133,15 +132,15 @@
                     
                     <!-- Decorative elements around video -->
                     <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm">
+                        <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm" data-aos="fade-up" data-aos-delay="200">
                             <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold">1</div>
                             <p class="text-sm font-bold text-slate-600 uppercase tracking-widest">Tonton Panduan</p>
                         </div>
-                        <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm">
+                        <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm" data-aos="fade-up" data-aos-delay="400">
                             <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold">2</div>
                             <p class="text-sm font-bold text-slate-600 uppercase tracking-widest">Pahami Sistem</p>
                         </div>
-                        <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm">
+                        <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm" data-aos="fade-up" data-aos-delay="600">
                             <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold">3</div>
                             <p class="text-sm font-bold text-slate-600 uppercase tracking-widest">Mulai Kelola</p>
                         </div>
@@ -154,16 +153,16 @@
         <!-- Preview Section -->
         <section id="preview" class="py-32">
             <div class="max-w-7xl mx-auto px-6">
-                <div class="text-center mb-20">
+                <div class="text-center mb-20" data-aos="fade-up">
                     <h3 class="text-emerald-600 font-bold tracking-widest text-sm uppercase mb-4 text-center">Preview</h3>
                     <h2 class="text-4xl font-black text-slate-900">Dashboard ringkas</h2>
                     <p class="text-slate-500 font-medium mt-4">Angka statistik beranimasi saat kamu scroll — gambaran nyata saldo dan arus kas.</p>
                 </div>
 
                 <!-- Dashboard Mockup -->
-                <div class="max-w-4xl mx-auto bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.08)] border border-slate-100 overflow-hidden">
+                <div class="max-w-4xl mx-auto bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.08)] border border-slate-100 overflow-hidden" data-aos="fade-up" data-aos-duration="1200">
                     <div class="p-8 md:p-12">
-                        <div class="flex items-center justify-between mb-10">
+                        <div class="flex items-center justify-between mb-10" data-aos="fade-right" data-aos-delay="400">
                             <div>
                                 <h5 class="text-slate-400 font-bold uppercase text-[10px] tracking-widest mb-1">Ringkasan</h5>
                                 <p class="text-slate-900 font-bold">Bulan ini</p>
@@ -172,56 +171,56 @@
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100" data-aos="fade-up" data-aos-delay="100">
                                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Pemasukan</p>
-                                <p class="text-2xl font-black text-emerald-600">Rp 5.240.000</p>
+                                <p class="text-2xl font-black text-emerald-600">Rp <span class="counter" data-target="5240000">0</span></p>
                             </div>
-                            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100" data-aos="fade-up" data-aos-delay="300">
                                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Pengeluaran</p>
-                                <p class="text-2xl font-black text-pink-500">Rp 1.890.000</p>
+                                <p class="text-2xl font-black text-pink-500">Rp <span class="counter" data-target="1890000">0</span></p>
                             </div>
-                            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100" data-aos="fade-up" data-aos-delay="500">
                                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Saldo</p>
-                                <p class="text-2xl font-black text-slate-900">Rp 3.350.000</p>
+                                <p class="text-2xl font-black text-slate-900">Rp <span class="counter" data-target="3350000">0</span></p>
                             </div>
                         </div>
 
                         <div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-6">Transaksi Terbaru</p>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-6" data-aos="fade-right" data-aos-delay="600">Transaksi Terbaru</p>
                             <div class="space-y-4">
-                                <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-50 shadow-sm">
+                                <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-50 shadow-sm" data-aos="fade-up" data-aos-delay="700">
                                     <div class="flex items-center gap-4">
                                         <div class="w-10 h-10 bg-pink-50 rounded-full flex items-center justify-center text-pink-500">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                                         </div>
                                         <div>
-                                            <p class="font-bold text-slate-900 text-sm">Keluar · Kopi</p>
+                                            <p class="font-bold text-slate-900 text-sm">Keluar · Beli Penghapus Papan Tulis</p>
                                             <p class="text-[10px] text-slate-400 font-bold">Hari ini</p>
                                         </div>
                                     </div>
                                     <p class="font-black text-pink-500">-15.000</p>
                                 </div>
 
-                                <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-50 shadow-sm">
+                                <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-50 shadow-sm" data-aos="fade-up" data-aos-delay="800">
                                     <div class="flex items-center gap-4">
                                         <div class="w-10 h-10 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
                                         </div>
                                         <div>
-                                            <p class="font-bold text-slate-900 text-sm">Masuk · Gaji</p>
+                                            <p class="font-bold text-slate-900 text-sm">Masuk · Budi Bayar Kas</p>
                                             <p class="text-[10px] text-slate-400 font-bold">Hari ini</p>
                                         </div>
                                     </div>
-                                    <p class="font-black text-emerald-600">+500.000</p>
+                                    <p class="font-black text-emerald-600">+5.000</p>
                                 </div>
 
-                                <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-50 shadow-sm">
+                                <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-50 shadow-sm" data-aos="fade-up" data-aos-delay="900">
                                     <div class="flex items-center gap-4">
                                         <div class="w-10 h-10 bg-pink-50 rounded-full flex items-center justify-center text-pink-500">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                                         </div>
                                         <div>
-                                            <p class="font-bold text-slate-900 text-sm">Keluar · Makan siang</p>
+                                            <p class="font-bold text-slate-900 text-sm">Keluar · Beli Spidol Kelas</p>
                                             <p class="text-[10px] text-slate-400 font-bold">Kemarin</p>
                                         </div>
                                     </div>
@@ -235,9 +234,9 @@
         </section>
 
         <!-- Footer -->
-        <footer class="py-20 bg-slate-900 text-white">
+        <footer class="py-20 bg-slate-900 text-white overflow-hidden">
             <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
-                <div class="col-span-1 md:col-span-2">
+                <div class="col-span-1 md:col-span-2" data-aos="fade-right">
                     <div class="flex items-center mb-6">
                         <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-12 h-12 object-contain brightness-0 invert" draggable="false">
                     </div>
@@ -245,7 +244,7 @@
                         Solusi terbaik untuk pengelolaan keuangan organisasi yang transparan, mudah, dan menyenangkan bagi bendahara dan anggota.
                     </p>
                 </div>
-                <div>
+                <div data-aos="fade-up" data-aos-delay="200">
                     <h5 class="text-slate-100 font-bold mb-6">Tautan Cepat</h5>
                     <ul class="space-y-4 text-slate-400 font-medium text-sm">
                         <li><a href="#" class="hover:text-emerald-500 transition-colors">Beranda</a></li>
@@ -254,7 +253,7 @@
                         <li><a href="{{ route('login') }}" class="hover:text-emerald-500 transition-colors">Masuk</a></li>
                     </ul>
                 </div>
-                <div>
+                <div data-aos="fade-up" data-aos-delay="400">
                     <h5 class="text-slate-100 font-bold mb-6">Kontak</h5>
                     <ul class="space-y-4 text-slate-400 font-medium text-sm">
                         <li class="flex items-center gap-3">
@@ -264,9 +263,97 @@
                     </ul>
                 </div>
             </div>
-            <div class="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-slate-800 text-center text-slate-500 text-xs font-bold uppercase tracking-widest">
+            <div class="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-slate-800 text-center text-slate-500 text-xs font-bold uppercase tracking-widest" data-aos="fade-up">
                 &copy; {{ date('Y') }} Kasly. All rights reserved.
             </div>
         </footer>
+
+        <!-- Scripts -->
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <script>
+            // Initialize AOS
+            AOS.init({
+                duration: 800,
+                once: true,
+                easing: 'ease-out-quart'
+            });
+
+            // Counter Animation Logic
+            const counters = document.querySelectorAll('.counter');
+            const speed = 200;
+
+            const animateCounter = (counter) => {
+                const target = +counter.getAttribute('data-target');
+                let count = 0;
+                const increment = target / speed;
+
+                const updateCount = () => {
+                    count += increment;
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count).toLocaleString('id-ID');
+                        setTimeout(updateCount, 1);
+                    } else {
+                        counter.innerText = target.toLocaleString('id-ID');
+                    }
+                };
+
+                updateCount();
+            };
+
+            // Intersection Observer to trigger counter
+            const observerOptions = {
+                threshold: 0.5
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+                        animateCounter(entry.target);
+                        entry.target.classList.add('counted');
+                    }
+                });
+            }, observerOptions);
+
+            counters.forEach(counter => observer.observe(counter));
+
+            // Typewriter Animation Logic
+            const text1 = "Catat keuangan organisasi";
+            const text2 = "langsung dari smartphone.";
+            const speedType = 50;
+
+            function typeWriter(text, elementId, callback) {
+                let i = 0;
+                const element = document.getElementById(elementId);
+                
+                function type() {
+                    if (i < text.length) {
+                        element.innerHTML += text.charAt(i);
+                        i++;
+                        setTimeout(type, speedType);
+                    } else if (callback) {
+                        callback();
+                    }
+                }
+                type();
+            }
+
+            // Start typing after a short delay
+            const mainCursor = document.getElementById('main-cursor');
+            const tw1 = document.getElementById('typewriter1');
+            const tw2 = document.getElementById('typewriter2');
+
+            // Initially place cursor after first line
+            tw1.after(mainCursor);
+
+            setTimeout(() => {
+                typeWriter(text1, "typewriter1", () => {
+                    setTimeout(() => {
+                        // Move cursor to second line
+                        tw2.after(mainCursor);
+                        typeWriter(text2, "typewriter2");
+                    }, 300);
+                });
+            }, 500);
+        </script>
     </body>
 </html>
