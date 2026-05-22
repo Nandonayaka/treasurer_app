@@ -1,8 +1,8 @@
 <x-app-layout>
     <div x-data="{ 
-        showDrawer: false, 
-        showEditDrawer: false,
-        showMemberDrawer: false, 
+        showDrawer: {{ $errors->hasAny(['amount', 'type', 'name', 'description', 'date']) ? 'true' : 'false' }}, 
+        showEditDrawer: {{ $errors->hasAny(['name', 'description', 'weekly_fee']) ? 'true' : 'false' }},
+        showMemberDrawer: {{ $errors->hasAny(['name', 'gender']) ? 'true' : 'false' }}, 
         showDetailModal: false,
         showConfirmModal: false,
         showNextPeriodModal: false,
@@ -288,6 +288,7 @@
                             @csrf
                             <input type="hidden" name="classroom_id" value="{{ $classroom->id }}">
                             <input type="hidden" name="member_id" x-model="selectedMember">
+                            <input type="hidden" name="name" x-model="memberName">
                             
                             <div class="space-y-6">
                                 <!-- Member Selector -->
@@ -318,6 +319,8 @@
                                             </div>
                                         </template>
                                     </div>
+                                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                                    <x-input-error :messages="$errors->get('member_id')" class="mt-2" />
                                 </div>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -327,6 +330,7 @@
                                             <span class="absolute left-5 top-1/2 -translate-y-1/2 text-sm font-black text-slate-400">Rp</span>
                                             <input type="number" name="amount" required x-model="txAmount" class="w-full bg-slate-50 border-none rounded-2xl py-4 pl-12 pr-5 font-black text-base text-slate-800 focus:ring-2 focus:ring-slate-900 transition-all shadow-inner tabular-nums">
                                         </div>
+                                        <x-input-error :messages="$errors->get('amount')" class="mt-2" />
                                     </div>
                                     <div>
                                         <label class="text-[9px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block px-1">Tipe</label>
@@ -334,17 +338,20 @@
                                             <option value="income">Pemasukan (+)</option>
                                             <option value="expense">Pengeluaran (-)</option>
                                         </select>
+                                        <x-input-error :messages="$errors->get('type')" class="mt-2" />
                                     </div>
                                 </div>
 
                                 <div>
                                     <label class="text-[9px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block px-1">Keterangan / Pesan</label>
                                     <input type="text" name="description" x-model="txDescription" placeholder="Contoh: Bayar kas, beli buku..." class="w-full bg-slate-50 border-none rounded-2xl p-4 md:p-5 font-bold text-xs md:text-sm text-slate-700 focus:ring-2 focus:ring-slate-900 transition-all shadow-inner">
+                                    <x-input-error :messages="$errors->get('description')" class="mt-2" />
                                 </div>
 
                                 <div>
                                     <label class="text-[9px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block px-1">Waktu Transaksi</label>
                                     <input type="datetime-local" name="date" required value="{{ date('Y-m-d\TH:i') }}" class="w-full bg-slate-50 border-none rounded-2xl p-4 md:p-5 font-black text-[10px] md:text-xs text-slate-700 focus:ring-2 focus:ring-slate-900 transition-all shadow-inner cursor-pointer">
+                                    <x-input-error :messages="$errors->get('date')" class="mt-2" />
                                 </div>
                             </div>
                             
@@ -434,6 +441,7 @@
                                 <div>
                                     <label class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-3 block px-1">Nama Lengkap Siswa</label>
                                     <input type="text" name="name" required placeholder="Masukkan nama..." class="w-full bg-slate-50 border-none rounded-2xl p-4 md:p-5 font-black text-slate-800 text-sm md:text-base focus:ring-2 focus:ring-slate-900 transition-all shadow-inner">
+                                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
                                 </div>
                                 <div x-data="{ selGender: 'male' }">
                                     <label class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-4 block px-1">Jenis Kelamin</label>
@@ -453,6 +461,7 @@
                                             </div>
                                         </label>
                                     </div>
+                                    <x-input-error :messages="$errors->get('gender')" class="mt-2" />
                                 </div>
                             </div>
                             <div class="pt-6">

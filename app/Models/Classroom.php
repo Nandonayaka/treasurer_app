@@ -21,6 +21,7 @@ class Classroom extends Model
         'billing_cycle_anchor',
         'accumulated_expected_fees',
         'current_period',
+        'period_dates',
     ];
 
     protected $casts = [
@@ -29,6 +30,7 @@ class Classroom extends Model
         'accumulated_expected_fees' => 'decimal:2',
         'billing_period_days' => 'float',
         'current_period' => 'integer',
+        'period_dates' => 'array',
     ];
 
     public function user(): BelongsTo

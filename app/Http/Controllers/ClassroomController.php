@@ -40,6 +40,7 @@ class ClassroomController extends Controller
             'billing_cycle_anchor' => now(),
             'current_period' => 1,
             'accumulated_expected_fees' => $request->weekly_fee,
+            'period_dates' => [1 => now()->toDateTimeString()],
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Kelas berhasil ditambahkan!');
@@ -61,11 +62,15 @@ class ClassroomController extends Controller
         $anchor = $classroom->billing_cycle_anchor ?? $classroom->created_at;
         $periodDays = (float)($classroom->billing_period_days ?? 7);
 
+        $periodDates = $classroom->period_dates ?? [];
         for ($i = 1; $i <= $currentPeriod; $i++) {
+            $periodDateStr = $periodDates[$i] ?? null;
+            $periodDate = $periodDateStr ? \Carbon\Carbon::parse($periodDateStr) : $anchor->copy()->addDays(($i - 1) * $periodDays);
+            
             $periods[] = [
                 'index' => $i,
                 'fee' => (float)$classroom->weekly_fee,
-                'date' => $anchor->copy()->addDays(($i - 1) * $periodDays)
+                'date' => $periodDate
             ];
         }
 
@@ -165,8 +170,21 @@ class ClassroomController extends Controller
             abort(403);
         }
 
-        $classroom->increment('current_period');
-        $classroom->increment('accumulated_expected_fees', $classroom->weekly_fee);
+        $newPeriod = $classroom->current_period + 1;
+        $periodDates = $classroom->period_dates ?? [];
+        
+        // If it's missing period 1 (legacy data), initialize it
+        if (!isset($periodDates[1])) {
+            $periodDates[1] = ($classroom->billing_cycle_anchor ?? $classroom->created_at)->toDateTimeString();
+        }
+        
+        $periodDates[$newPeriod] = now()->toDateTimeString();
+
+        $classroom->update([
+            'current_period' => $newPeriod,
+            'accumulated_expected_fees' => $classroom->accumulated_expected_fees + $classroom->weekly_fee,
+            'period_dates' => $periodDates
+        ]);
 
         return redirect()->route('classrooms.show', $classroom)
             ->with('success', "Berhasil! Periode sekarang adalah Ke-{$classroom->current_period}. Tagihan anggota otomatis bertambah Rp" . number_format($classroom->weekly_fee, 0, ',', '.'));
