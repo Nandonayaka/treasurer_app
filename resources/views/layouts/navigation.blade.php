@@ -13,7 +13,7 @@
                 <!-- Logo (Mobile Only) -->
                 <div class="shrink-0 flex items-center lg:hidden">
                     <a href="{{ route('dashboard') }}" class="block">
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-9 w-auto">
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-7 w-auto">
                     </a>
                 </div>
 

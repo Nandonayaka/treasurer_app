@@ -1,6 +1,22 @@
 <x-app-layout>
+    @push('styles')
+    <style>
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            bottom: 0;
+            color: transparent;
+            cursor: pointer;
+            height: auto;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: auto;
+        }
+    </style>
+    @endpush
     <div class="py-6 md:py-12 bg-slate-50 min-h-screen">
-        <div class="max-w-xl mx-auto px-4 sm:px-6">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
             <!-- Header -->
             <div class="flex flex-col gap-6 mb-8">
                 <div class="flex items-center justify-between">
@@ -25,12 +41,12 @@
                 <div class="relative group">
                     <input type="text" name="search" value="{{ request('search') }}" 
                         placeholder="Cari transaksi (nama/catatan)..." 
-                        class="w-full bg-white border-0 rounded-3xl py-4 pl-12 pr-6 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-emerald-500 shadow-sm transition-all group-hover:shadow-md">
+                        class="w-full bg-white border-0 rounded-2xl py-4 pl-12 pr-6 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-emerald-500 shadow-sm transition-all group-hover:shadow-md">
                     <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     </div>
                 </div>
-                <div class="flex gap-2">
+                <div class="flex flex-col md:flex-row gap-3">
                     <div class="relative flex-1">
                         <select name="type" onchange="this.form.submit()" 
                             class="w-full bg-white border-0 rounded-2xl py-3.5 px-5 text-xs font-black uppercase tracking-widest text-slate-600 focus:ring-2 focus:ring-emerald-500 shadow-sm appearance-none">
@@ -42,14 +58,24 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
                         </div>
                     </div>
-                    @if(request('search') || request('type'))
-                        <a href="{{ route('classrooms.history', $classroom) }}" class="px-5 flex items-center justify-center bg-slate-200 text-slate-500 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-300 transition-all">
+                    
+                    <div class="relative flex-1">
+                        <input type="date" name="date" value="{{ request('date') }}" onchange="this.form.submit()"
+                            class="w-full bg-white border-0 rounded-2xl py-3.5 px-5 text-xs font-black uppercase tracking-widest text-slate-600 focus:ring-2 focus:ring-emerald-500 shadow-sm cursor-pointer">
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-900">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="md:hidden h-12 px-8 bg-slate-900 text-white rounded-2xl flex items-center justify-center active:scale-95 transition-all shadow-lg shadow-slate-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </button>
+
+                    @if(request('search') || request('type') || request('date'))
+                        <a href="{{ route('classrooms.history', $classroom) }}" class="md:ml-auto px-6 py-3.5 flex items-center justify-center bg-slate-200 text-slate-500 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-300 transition-all">
                             Reset
                         </a>
                     @endif
-                    <button type="submit" class="md:hidden px-5 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    </button>
                 </div>
             </form>
 
@@ -60,7 +86,7 @@
                         $displayTitle = ($transaction->name === 'Umum' || $transaction->name === 'General') ? $transaction->description : $transaction->name;
                         $isLong = strlen($displayTitle) > 40;
                     @endphp
-                    <div x-data="{ expanded: false }" class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex items-center justify-between gap-4">
+                    <div x-data="{ expanded: false }" class="bg-white rounded-[2rem] p-5 md:p-6 border border-slate-100 shadow-sm flex items-center justify-between gap-4">
                         <div class="flex items-center gap-4 flex-1 min-w-0">
                             <div class="w-10 h-10 rounded-2xl shrink-0 flex items-center justify-center {{ $transaction->type === 'income' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600' }}">
                                 @if($transaction->type === 'income')
@@ -91,7 +117,7 @@
                         </div>
                     </div>
                 @empty
-                    <div class="py-20 text-center bg-white rounded-3xl border border-dashed border-slate-200">
+                    <div class="py-20 text-center bg-white rounded-[2rem] border border-dashed border-slate-200">
                         <p class="text-slate-400 font-bold text-sm uppercase tracking-widest">Belum ada transaksi</p>
                     </div>
                 @endforelse

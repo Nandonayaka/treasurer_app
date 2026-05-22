@@ -73,7 +73,10 @@
             @include('layouts.sidebar')
 
             <div class="flex-1 flex flex-col min-w-0 min-h-screen">
-                <!-- Top Navigation (Mobile & desktop profile) -->
+                <!-- Desktop Navigation Bar -->
+                @include('layouts.desktop-nav')
+
+                <!-- Top Navigation (Mobile) -->
                 @include('layouts.navigation')
 
                 <!-- Page Content -->

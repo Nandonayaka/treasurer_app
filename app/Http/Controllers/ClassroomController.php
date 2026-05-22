@@ -196,7 +196,11 @@ class ClassroomController extends Controller
             $query->where('type', $request->type);
         }
 
-        $transactions = $query->latest()->paginate(15)->withQueryString();
+        if ($request->filled('date')) {
+            $query->whereDate('date', $request->date);
+        }
+
+        $transactions = $query->latest()->paginate(10)->withQueryString();
         
         return view('classrooms.history', compact('classroom', 'transactions'));
     }

@@ -24,12 +24,31 @@
                 year: 'numeric',
                 timeZone: 'Asia/Jakarta'
             }).format(this.now);
-        }
-    }" class="min-h-screen bg-slate-50/50">
+        },
+        searchQuery: ''
+    }" @search-classrooms.window="searchQuery = $event.detail" class="min-h-screen bg-slate-50/50">
         <!-- Main Dashboard Container -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+                    <!-- Dashboard Welcome Banner (Simplified) -->
+                    <div class="hidden md:flex relative bg-gradient-to-r from-emerald-500/10 to-teal-500/5 rounded-[2rem] p-6 md:p-8 overflow-hidden mb-8 group border border-emerald-100 items-center justify-between">
+                        <div class="absolute -right-10 -top-10 w-64 h-64 bg-emerald-200/20 rounded-full blur-[80px] group-hover:scale-110 transition-transform duration-1000"></div>
+                        
+                        <div class="relative z-10 text-left">
+                            <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-none mb-2">Halo {{ Auth::user()->name }}!</h1>
+                            <p class="text-slate-500 font-medium text-xs md:text-sm max-w-sm leading-relaxed">Siap untuk mengelola keuangan organisasi hari ini?</p>
+                        </div>
+
+                        <div class="relative z-10 shrink-0 hidden md:block">
+                            <div class="w-20 h-20 bg-white/40 backdrop-blur-sm rounded-2xl p-4 flex items-center justify-center shadow-lg shadow-emerald-900/5 border border-white/50">
+                                <svg class="w-full h-full text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
             <!-- Mobile Clock & Date Header -->
-            <div class="lg:hidden mb-10 flex items-center justify-between bg-emerald-600 rounded-[1.2rem] p-6 border border-emerald-500 shadow-[0_15px_40px_-20px_rgba(16,185,129,0.4)] relative overflow-hidden">
+            <div class="lg:hidden mb-10 flex items-center justify-between bg-emerald-600 rounded-[2rem] p-6 border border-emerald-500 shadow-[0_15px_40px_-20px_rgba(16,185,129,0.4)] relative overflow-hidden">
                 <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
                 <div class="relative z-10">
                     <p x-text="formattedDate" class="text-emerald-50 font-bold text-[10px] tracking-tight uppercase mb-1.5"></p>
@@ -47,23 +66,6 @@
                 
                 <!-- Middle Area: Content (Classroom Cards) -->
                 <div class="flex-1 space-y-10">
-                    <!-- Dashboard Welcome Banner (Simplified) -->
-                    <div class="relative bg-gradient-to-r from-emerald-500/10 to-teal-500/5 rounded-3xl p-6 md:p-8 overflow-hidden mb-8 group border border-emerald-100 flex items-center justify-between">
-                        <div class="absolute -right-10 -top-10 w-64 h-64 bg-emerald-200/20 rounded-full blur-[80px] group-hover:scale-110 transition-transform duration-1000"></div>
-                        
-                        <div class="relative z-10 text-left">
-                            <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-none mb-2">Halo {{ Auth::user()->name }}!</h1>
-                            <p class="text-slate-500 font-medium text-xs md:text-sm max-w-sm leading-relaxed">Siap untuk mengelola keuangan organisasi hari ini?</p>
-                        </div>
-
-                        <div class="relative z-10 shrink-0 hidden md:block">
-                            <div class="w-20 h-20 bg-white/40 backdrop-blur-sm rounded-2xl p-4 flex items-center justify-center shadow-lg shadow-emerald-900/5 border border-white/50">
-                                <svg class="w-full h-full text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="flex items-center justify-between mb-8">
                         <h2 class="text-2xl font-black text-slate-800 tracking-tight">Ruang Kas Saya</h2>
@@ -73,8 +75,19 @@
                         </button>
                     </div>
 
+                    <!-- Mobile Search Bar -->
+                    <div class="lg:hidden mb-8">
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                            </span>
+                            <input type="text" placeholder="Cari ruang kas..." @keydown.enter="searchQuery = $el.value"
+                                class="w-full bg-white border border-slate-100 rounded-2xl py-4 pl-11 pr-4 text-xs font-bold text-slate-600 focus:ring-2 focus:ring-emerald-500 transition-all shadow-sm">
+                        </div>
+                    </div>
+
                     <!-- Classes List (Grid Style) -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">
                         @forelse($classrooms as $classroom)
                             @php
                                 $income = $classroom->transactions->where('type', 'income')->sum('amount');
@@ -85,7 +98,8 @@
                                 $color = $colors[$classroom->id % count($colors)];
                             @endphp
                             <a href="{{ route('classrooms.show', $classroom) }}" 
-                               class="group relative bg-white border border-slate-100 p-6 rounded-3xl shadow-sm hover:shadow-xl hover:shadow-emerald-100/30 hover:border-emerald-200 hover:-translate-y-1 transition-all duration-500 flex flex-col justify-between overflow-hidden">
+                               x-show="!searchQuery || '{{ strtolower($classroom->name) }}'.includes(searchQuery.toLowerCase())"
+                               class="group relative bg-white border border-slate-100 p-6 rounded-[2rem] shadow-sm hover:shadow-xl hover:shadow-emerald-100/30 hover:border-emerald-200 hover:-translate-y-1 transition-all duration-500 flex flex-col justify-between overflow-hidden">
                                 <!-- Subtle Background Pattern -->
                                 <div class="absolute -right-8 -top-8 w-24 h-24 bg-{{ $color }}-50 rounded-full blur-3xl opacity-50 group-hover:opacity-100 group-hover:bg-emerald-50 transition-all duration-700"></div>
                                 
@@ -125,7 +139,7 @@
                                 </div>
                             </a>
                         @empty
-                            <div class="md:col-span-2 py-24 text-center bg-white rounded-[2.5rem] border border-dashed border-slate-200">
+                            <div class="md:col-span-2 lg:col-span-3 py-24 text-center bg-white rounded-[2rem] border border-dashed border-slate-200">
                                 <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-300">
                                     <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                                 </div>
@@ -140,7 +154,7 @@
                 <!-- Right Area: Sidebar (Clock, Calendar, Stats) -->
                 <div class="w-full lg:w-[310px] space-y-6">
                     <!-- Real-time Indonesia Date & Time (Desktop only) -->
-                    <div class="hidden lg:block bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-3xl p-7 text-white relative overflow-hidden group shadow-lg shadow-emerald-900/20">
+                    <div class="hidden lg:block bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-[2rem] p-7 text-white relative overflow-hidden group shadow-lg shadow-emerald-900/20">
                         <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-1000"></div>
                         <div class="relative z-10">
                             <div class="flex items-center gap-2 mb-4">
@@ -153,7 +167,7 @@
                     </div>
 
                     <!-- Modern Calendar Component (Desktop only) -->
-                    <div class="hidden lg:block bg-white rounded-3xl p-7 border border-slate-50 shadow-sm">
+                    <div class="hidden lg:block bg-white rounded-[2rem] p-7 border border-slate-50 shadow-sm">
                         <div class="flex items-center justify-between mb-6">
                             <h3 class="text-base font-black text-slate-800 tracking-tight" x-text="new Intl.DateTimeFormat('id-ID', { month: 'long', year: 'numeric' }).format(now)"></h3>
                             <div class="flex gap-2">
@@ -211,7 +225,7 @@
                          x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" 
                          x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full" 
                          class="pointer-events-auto w-screen max-w-md">
-                        <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-2xl rounded-l-[3rem]">
+                        <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-2xl rounded-l-[2rem]">
                             <div class="px-8 pt-10 pb-6 border-b border-slate-50 text-center">
                                 <h2 class="text-2xl font-black text-slate-800 tracking-tight" id="slide-over-title">Buat Ruang Kas</h2>
                                 <p class="mt-1 text-sm text-slate-500 font-medium tracking-tight px-4">Buat wadah baru untuk mengelola catatan kas organisasi Anda.</p>
